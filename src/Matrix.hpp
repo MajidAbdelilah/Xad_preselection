@@ -13,9 +13,11 @@ public:
     long rows() const;
     long cols() const;
     void print() const;
-private:
+protected:
     long _rows;
+    long _rows_start;
     long _cols;
+    long _cols_start;
     long reported_colomns;
     double *data;
 };
