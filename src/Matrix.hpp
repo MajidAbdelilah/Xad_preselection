@@ -1,3 +1,8 @@
+#pragma once
+#include <vector>
+
+class MatrixView;
+
 class Matrix
 {
 public:
@@ -14,6 +19,7 @@ public:
     long cols() const;
     void print() const;
     double *get_data() const;
+    std::vector<MatrixView*> &get_views();
 protected:
     Matrix(const long _rows, const long _rows_start, const long _cols, const long _cols_start, const long reported_colomns, double *data);
     long _rows;
@@ -22,4 +28,6 @@ protected:
     long _cols_start;
     long reported_colomns;
     double *data;
+    std::vector<MatrixView*> views;   
+    bool delete_views; 
 };

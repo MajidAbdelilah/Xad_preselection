@@ -1,14 +1,14 @@
 #include "Matrix.hpp"
 #include <iostream>
+#include "MatrixView.hpp" 
 
 Matrix::Matrix(const long _rows, const long _cols)
-    : _rows(_rows), _rows_start(0), _cols(_cols), _cols_start(0), reported_colomns(_cols), data(new double[_rows * _cols])
+    : _rows(_rows), _rows_start(0), _cols(_cols), _cols_start(0), reported_colomns(_cols), data(new double[_rows * _cols]), delete_views(true)
 {
-
 }
 
 Matrix::Matrix(const long _rows, const long _cols, const double val)
-    : _rows(_rows), _rows_start(0), _cols(_cols), _cols_start(0), reported_colomns(_cols), data(new double[_rows * _cols])
+    : _rows(_rows), _rows_start(0), _cols(_cols), _cols_start(0), reported_colomns(_cols), data(new double[_rows * _cols]), delete_views(true)
 {
     for (long i = 0; i < _rows * _cols; i++)
     {
@@ -17,7 +17,7 @@ Matrix::Matrix(const long _rows, const long _cols, const double val)
 }
 
 Matrix::Matrix(const Matrix &m)
-    : _rows(m._rows), _cols(m.reported_colomns), _rows_start(0), _cols_start(0), reported_colomns(m.reported_colomns), data(new double[m._rows * m.reported_colomns])
+    : _rows(m._rows), _cols(m.reported_colomns), _rows_start(0), _cols_start(0), reported_colomns(m.reported_colomns), data(new double[m._rows * m.reported_colomns]), delete_views(m.delete_views)
 {
     for(int i = 0; i < m._rows; i++)
     {
@@ -29,7 +29,7 @@ Matrix::Matrix(const Matrix &m)
 }
 
 Matrix::Matrix(Matrix &&m)
-    : _rows(m._rows), _cols(m._cols), _rows_start(m._rows_start), _cols_start(m._cols_start), reported_colomns(m.reported_colomns), data(m.data)
+    : _rows(m._rows), _cols(m._cols), _rows_start(m._rows_start), _cols_start(m._cols_start), reported_colomns(m.reported_colomns), data(m.data), views(m.views), delete_views(m.delete_views)
 {
     m._rows = 0;
     m._cols = 0;
@@ -39,9 +39,19 @@ Matrix::Matrix(Matrix &&m)
     m.data = nullptr;
 }
 
+
 Matrix::~Matrix()
 {
-    delete[] data;
+    std::cout << "Matrix destructor" << std::endl;
+
+    if(delete_views)
+    {
+        if(!views.size())
+        {
+            delete [] data;
+        }
+    }
+   
 }
 
 Matrix &Matrix::operator=(const Matrix &m)
@@ -55,9 +65,11 @@ Matrix &Matrix::operator=(const Matrix &m)
         _cols_start = m._cols_start;
         reported_colomns = m.reported_colomns;
         data = new double[m._rows * m._cols];
+        views = m.views;
         for (long i = 0; i < m._rows * m._cols; i++)
         {
             data[i] = m.data[i];
+            views[i] = m.views[i];
         }
     }
     return *this;
@@ -137,3 +149,9 @@ double *Matrix::get_data() const
 {
     return data;
 }
+
+std::vector<MatrixView*> &Matrix::get_views()
+{
+    return views;
+}
+
