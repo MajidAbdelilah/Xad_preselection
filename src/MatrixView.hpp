@@ -2,7 +2,7 @@
 
 #include "Matrix.hpp"
 
-class MatrixView : public Matrix
+class MatrixView
 {
 public:
     MatrixView(Matrix &m, const long start_row, const long start_col, const long num_rows, const long num_cols);
@@ -18,6 +18,5 @@ public:
     void print() const;
     void set_index(const long index);
     long get_index() const;
-private:
-    long index;
+
 };
