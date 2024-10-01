@@ -17,11 +17,14 @@ Matrix::Matrix(const long _rows, const long _cols, const double val)
 }
 
 Matrix::Matrix(const Matrix &m)
-    : _rows(m._rows), _cols(m._cols), _rows_start(m._rows_start), _cols_start(m._cols_start), reported_colomns(m.reported_colomns), data(new double[m._rows * m._cols])
+    : _rows(m._rows), _cols(m.reported_colomns), _rows_start(0), _cols_start(0), reported_colomns(m.reported_colomns), data(new double[m._rows * m.reported_colomns])
 {
-    for (long i = 0; i < m._rows * m._cols; i++)
+    for(int i = 0; i < m._rows; i++)
     {
-        data[i] = m.data[i];
+        for(int j = 0; j < m.reported_colomns; j++)
+        {
+            data[i * m.reported_colomns + j] = m(i, j);
+        }
     }
 }
 
@@ -83,11 +86,21 @@ Matrix &Matrix::operator=(Matrix &&m)
 
 double &Matrix::operator()(const long i, const long j)
 {
+    if (i < 0 || i >= _rows || j < 0 || j >= reported_colomns)
+    {
+        throw std::out_of_range("MatrixView: index out of range");
+    }
+    // std::cout << (_rows_start + i) * _cols + (_cols_start + j) << std::endl; 
     return data[(_rows_start + i) * _cols + (_cols_start + j)];
 }
 
 double Matrix::operator()(const long i, const long j) const
 {
+    if (i < 0 || i >= _rows || j < 0 || j >= reported_colomns)
+    {
+        throw std::out_of_range("MatrixView: index out of range");
+    }
+    // std::cout << (_rows_start + i) * _cols + (_cols_start + j) << std::endl; 
     return data[(_rows_start + i) * _cols + (_cols_start + j)];
 }
 
@@ -113,3 +126,14 @@ void Matrix::print() const
     }
 }
 
+
+Matrix::Matrix(const long _rows, const long _rows_start, const long _cols, const long _cols_start, const long reported_colomns, double *data)
+    : _rows(_rows), _rows_start(_rows_start), _cols(_cols), _cols_start(_cols_start), reported_colomns(reported_colomns), data(data)
+{
+
+}
+
+double *Matrix::get_data() const
+{
+    return data;
+}
