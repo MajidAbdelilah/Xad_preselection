@@ -19,15 +19,10 @@ public:
     long cols() const;
     void print() const;
     double *get_data() const;
-    std::vector<MatrixView*> &get_views();
-protected:
-    Matrix(const long _rows, const long _rows_start, const long _cols, const long _cols_start, const long reported_colomns, double *data);
+    long *get_data_ref_count() const;
+private:
     long _rows;
-    long _rows_start;
     long _cols;
-    long _cols_start;
-    long reported_colomns;
     double *data;
-    std::vector<MatrixView*> views;   
-    bool delete_views; 
+    long *data_ref_count;
 };

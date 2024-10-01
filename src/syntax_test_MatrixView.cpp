@@ -3,8 +3,8 @@
 #include <iostream>
 
 void f(const Matrix& m) {
-   // Matrix m2 = m; // normal copy, no matter if m was actually a view or not
-  //  m2.print();
+   Matrix m2 = m; // normal copy, no matter if m was actually a view or not
+   m2.print();
     std::cout << std::endl;
 }
 
@@ -32,6 +32,6 @@ int main()
     p_m3 = nullptr; // destroy p_m3
     std::cout << v3(1, 1) << "\n"; // still prints 1.4 – data preserved in the view
 
-    // f(m); // regular Matrix passed - valid
-    // f(v3); // a view passed by reference - valid
+    f(m); // regular Matrix passed - valid
+    f(v3); // a view passed by reference - valid
 }

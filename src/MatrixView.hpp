@@ -16,7 +16,15 @@ public:
     long rows() const;
     long cols() const;
     void print() const;
-    void set_index(const long index);
-    long get_index() const;
-
+    double *get_data() const;
+    long *get_data_ref_count() const;
+    operator Matrix() const;
+private:
+    long _rows;
+    long _rows_start;
+    long _cols;
+    long _cols_start;
+    long _reported_cols;
+    double *data;
+    long *data_ref_count;
 };
