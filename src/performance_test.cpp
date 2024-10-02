@@ -34,7 +34,7 @@ int main() {
         int spanj = spandist(eng);
         MatrixView mv(m, starti, startj, spani, spanj);
         // use the result to avoid aggressive compiler to optimise out the loop.
-        sum += frobenius_norm_baseline_unoptimized(mv);
+        sum += frobenius_norm(mv);
     }
     stop = std::chrono::high_resolution_clock::now();
     auto t_comp =
