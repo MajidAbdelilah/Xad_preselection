@@ -18,6 +18,8 @@ public:
     void print() const;
     double *get_data() const;
     long *get_data_ref_count() const;
+    long get_rows_start() const;
+    long get_cols_start() const;
     operator Matrix() const;
 private:
     long _rows;

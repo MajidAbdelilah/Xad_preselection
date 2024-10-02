@@ -4,7 +4,6 @@
 #include <random>
 #include <chrono>
 #include <iostream>
-
 int main() {
     constexpr int N = 10000;
     constexpr int M = 1000;
