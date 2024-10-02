@@ -162,7 +162,7 @@ MatrixView::operator Matrix() const
 	if((thread_count) > _rows)
 		thread_count = _rows;
 	auto thread_size = _rows / thread_count;
-	std::thread threads[thread_count];
+	std::thread *threads = new std::thread[thread_count];
 	for (long i = 0; i < thread_count; i++)
 	{
 		long start = i * thread_size;
@@ -173,6 +173,7 @@ MatrixView::operator Matrix() const
 	{
 		threads[i].join();
 	}
+    delete [] threads;
 	// for (long i = 0; i < _rows; i++)
 	// {
 	//     memcpy(&m.get_data()[i * m.cols()], &data[(i + _rows_start) * _cols + _cols_start], _reported_cols * sizeof(double));

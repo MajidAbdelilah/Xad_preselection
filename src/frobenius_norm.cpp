@@ -111,8 +111,8 @@ double frobenius_norm(const Matrix& m)
 			processor_count = 1;
 	}
     const unsigned long sizePerThread = size / processor_count;
-    std::thread threads[processor_count];
-    double results[processor_count];
+    std::thread *threads = new std::thread[processor_count];
+    double *results = new double[processor_count];
 
 
     for( unsigned long i = 0; i < processor_count; ++i )
@@ -143,7 +143,9 @@ double frobenius_norm(const Matrix& m)
     {
         sum += results[i];
     }
-
+    
+    delete [] threads;
+    delete [] results;
     return sqrt( sum );
 }
 
