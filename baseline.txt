@@ -1,0 +1,3 @@
+init time = 1153.85ms
+run time = 4242.99ms
+sum = 261191

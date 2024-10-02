@@ -1,7 +1,7 @@
  #include "frobenius_norm.hpp"
 #include <cmath>
 #include <math.h>
-
+#include <thread>
 
 #include <immintrin.h>
 #include <iostream>
@@ -77,11 +77,13 @@ double dotProductFma( const double *a, const unsigned long a_size, const double 
     return tmp[0] + tmp[1];
 }
 
-double frobenius_norm(const Matrix& m)
+
+
+double frobenius_norm_thread(const double *m, const unsigned long size)
 {
-    const unsigned long size = m.rows() * m.cols();
+    // const unsigned long size = m.rows() * m.cols();
     const unsigned long sizeAligned = size / 16 * 16;
-    const double* data = m.get_data();
+    const double* data = m;
 
     const double sum = dotProductFma( data, sizeAligned, data, sizeAligned );
 
@@ -92,7 +94,49 @@ double frobenius_norm(const Matrix& m)
         rest += data[i] * data[i];
     }
 
-    return sqrt( sum + rest );
+    return sum + rest;
+}
+
+double frobenius_norm(const Matrix& m)
+{
+    const auto processor_count = std::thread::hardware_concurrency();
+    // std::cout << "Processor count: " << processor_count << std::endl;
+    const unsigned long size = m.rows() * m.cols();
+    const unsigned long sizePerThread = size / processor_count;
+    std::thread threads[processor_count];
+    double results[processor_count];
+
+
+    for( unsigned long i = 0; i < processor_count; ++i )
+    {
+        const double* data = m.get_data() + i * sizePerThread;
+        if( i == processor_count - 1 )
+        {
+            unsigned long rest = size - i * sizePerThread;
+            // std::cout << "Rest: " << rest << std::endl;
+            threads[i] = std::thread( [&results, i, data, rest] {
+                results[i] = frobenius_norm_thread( data, rest );
+            } );
+            break;
+        }
+        threads[i] = std::thread( [&results, i, data, sizePerThread] {
+            results[i] = frobenius_norm_thread( data, sizePerThread );
+        } );
+    }
+
+    for( unsigned long i = 0; i < processor_count; ++i )
+    {
+        threads[i].join();
+    }
+
+    double sum = 0.0;
+
+    for( unsigned long i = 0; i < processor_count; ++i )
+    {
+        sum += results[i];
+    }
+
+    return sqrt( sum );
 }
 
 
