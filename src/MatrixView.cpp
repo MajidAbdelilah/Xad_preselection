@@ -123,58 +123,15 @@ long *MatrixView::get_data_ref_count() const
     return data_ref_count;
 }
 
-void copy_cols_thread(double *m_data, unsigned long size, long _reported_cols, const double *src, long _rows_start, long _cols_start, long _cols)
-{
-    for (long i = 0; i < size; i++)
-    {
-        // memcpy(&m_data[i * m_cols], &src[(i + _rows_start) * _cols + _cols_start], _reported_cols * sizeof(double));
-        
-        for (long j = 0; j < _reported_cols; j++)
-        {
-            m_data[i * _reported_cols + j] = src[(i + _rows_start) * _cols + j + _cols_start];
-            // m(i, j) = data[(i + _rows_start) * _cols + j + _cols_start];
-        }
-        
-        // for (long j = 0; j < _reported_cols; j++)
-        // {
-        //     m.get_data()[i * m.cols() + j] = data[(i + _rows_start) * _cols + j + _cols_start];
-        //     m(i, j) = data[(i + _rows_start) * _cols + j + _cols_start];
-        // }
-    }
-}
+
 
 MatrixView::operator Matrix() const
 {
     Matrix m(_rows, _reported_cols);
-
-    // auto processor_count = std::thread::hardware_concurrency();
-    // std::thread threads[processor_count];
-    // unsigned long size = _rows;
-    // unsigned long sizePerThread = size / processor_count;
-
-    // for (unsigned long i = 0; i < processor_count; ++i)
-    // {
-    //     const double *src = data;
-    //     double *m_data = m.get_data() + i * sizePerThread * _reported_cols;
-    //     if (i == processor_count - 1)
-    //     {
-    //         unsigned long rest = size - i * sizePerThread;
-    //         threads[i] = std::thread(copy_cols_thread, m_data, rest, _reported_cols, src, _rows_start + i * sizePerThread, _cols_start, _cols);
-    //         break;
-    //     }
-    //     threads[i] = std::thread(copy_cols_thread, m_data, sizePerThread, _reported_cols, src, _rows_start + i * sizePerThread, _cols_start, _cols);
-    // }
-    
     for (long i = 0; i < _rows; i++)
     {
         memcpy(&m.get_data()[i * m.cols()], &data[(i + _rows_start) * _cols + _cols_start], _reported_cols * sizeof(double));
-        // for (long j = 0; j < _reported_cols; j++)
-        // {
-        //     m.get_data()[i * m.cols() + j] = data[(i + _rows_start) * _cols + j + _cols_start];
-        //     m(i, j) = data[(i + _rows_start) * _cols + j + _cols_start];
-        // }
     }
-
     return m;
 }
 
