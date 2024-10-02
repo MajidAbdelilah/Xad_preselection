@@ -11,7 +11,7 @@ endif()
 
 if(CMAKE_HOST_LINUX OR CMAKE_HOST_UNIX)
     if(CMAKE_BUILD_TYPE MATCHES Debug)
-    set(CMAKE_CXX_FLAGS " -g -O0 -mavx -mfma -mavx2 -mtune=native -fsanitize=address")
+    set(CMAKE_CXX_FLAGS " -g -Ofast -mavx -mfma -mavx2 -mtune=native -fsanitize=address")
     endif()
     if(CMAKE_BUILD_TYPE MATCHES Release)
         set(CMAKE_CXX_FLAGS " -Ofast -mavx -mfma -mavx2 -mtune=native ")
