@@ -1,6 +1,7 @@
 #include "MatrixView.hpp"
 #include <iostream>
 #include <thread>
+#include <string.h>
 
 MatrixView::MatrixView(Matrix &m, const long start_row, const long start_col, const long num_rows, const long num_cols)
     : _rows(num_rows), _rows_start(start_row), _cols(m.cols()), _cols_start(start_col), _reported_cols(num_cols), data(m.get_data()), data_ref_count(m.get_data_ref_count())
@@ -123,15 +124,59 @@ long *MatrixView::get_data_ref_count() const
     return data_ref_count;
 }
 
+void copy_MatrixView_data_to_Matrix_threaded(const MatrixView &mv, Matrix &m, const long start, const long end)
+{
+	for (long i = start; i < end; i++)
+	{
+        memcpy(&m.get_data()[i * m.cols()], &mv.get_data()[(i + mv.get_rows_start()) * mv.get_true_cols() + mv.get_cols_start()], mv.get_reported_cols() * sizeof(double));
+	}
+}
 
+long MatrixView::get_cols_start() const
+{
+	return _cols_start;
+}
+
+long MatrixView::get_rows_start() const
+{
+	return _rows_start;
+}
+
+long MatrixView::get_reported_cols() const
+{
+	return _reported_cols;
+}
+
+long MatrixView::get_true_cols() const
+{
+	return _cols;
+}
 
 MatrixView::operator Matrix() const
 {
     Matrix m(_rows, _reported_cols);
-    for (long i = 0; i < _rows; i++)
-    {
-        memcpy(&m.get_data()[i * m.cols()], &data[(i + _rows_start) * _cols + _cols_start], _reported_cols * sizeof(double));
-    }
-    return m;
+	auto thread_count = std::thread::hardware_concurrency();
+	if(thread_count == 0)
+		thread_count = 1;
+
+	if((thread_count) > _rows)
+		thread_count = _rows;
+	auto thread_size = _rows / thread_count;
+	std::thread threads[thread_count];
+	for (long i = 0; i < thread_count; i++)
+	{
+		long start = i * thread_size;
+		long end = (i == thread_count - 1) ? _rows : (i + 1) * thread_size;
+		threads[i] = std::thread(copy_MatrixView_data_to_Matrix_threaded, std::ref(*this), std::ref(m), start, end);
+	}
+	for (long i = 0; i < thread_count; i++)
+	{
+		threads[i].join();
+	}
+	// for (long i = 0; i < _rows; i++)
+	// {
+	//     memcpy(&m.get_data()[i * m.cols()], &data[(i + _rows_start) * _cols + _cols_start], _reported_cols * sizeof(double));
+	// }
+	return m;
 }
 

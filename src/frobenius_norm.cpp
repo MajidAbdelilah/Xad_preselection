@@ -99,9 +99,17 @@ double frobenius_norm_thread(const double *m, const unsigned long size)
 
 double frobenius_norm(const Matrix& m)
 {
-    const auto processor_count = std::thread::hardware_concurrency();
+    auto processor_count = std::thread::hardware_concurrency();
+	if(processor_count == 0)
+		processor_count = 1;
     // std::cout << "Processor count: " << processor_count << std::endl;
     const unsigned long size = m.rows() * m.cols();
+	if((processor_count * 16) > size)
+	{
+		processor_count = size / 16;
+		if(processor_count == 0)
+			processor_count = 1;
+	}
     const unsigned long sizePerThread = size / processor_count;
     std::thread threads[processor_count];
     double results[processor_count];

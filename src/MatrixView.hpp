@@ -20,6 +20,8 @@ public:
     long *get_data_ref_count() const;
     long get_rows_start() const;
     long get_cols_start() const;
+	long get_reported_cols() const;
+	long get_true_cols() const;
     operator Matrix() const;
 private:
     long _rows;

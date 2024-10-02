@@ -1,3 +1,14 @@
+macos
 init time = 1153.85ms
 run time = 4242.99ms
 sum = 261191
+
+linux
+init time = 1611.42ms
+run time = 1387.5ms
+sum = 260178
+
+linux for n = 10000, m = 10000
+init time = 1976.28ms
+run time = 222843ms
+sum = 2.59847e+06
