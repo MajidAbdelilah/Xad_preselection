@@ -32,7 +32,7 @@ if(CMAKE_HOST_LINUX OR CMAKE_HOST_UNIX)
     endif()
 endif()
 
-add_executable(performance_test src/performance_test.cpp src/Matrix.cpp src/MatrixView.cpp src/frobenius_norm.cpp)
+add_executable(performance_test src/performance_test.cpp src/Matrix.cpp src/MatrixView.cpp src/frobenius_norm.cpp src/Matrix.hpp src/MatrixView.hpp src/frobenius_norm.hpp )
 
-add_executable(unit_test src/unit_test.cpp src/Matrix.cpp src/MatrixView.cpp src/frobenius_norm.cpp)
+add_executable(unit_test src/unit_test.cpp src/Matrix.cpp src/MatrixView.cpp src/frobenius_norm.cpp src/Matrix.hpp src/MatrixView.hpp src/frobenius_norm.hpp)
 target_link_libraries(unit_test GTest::GTest)
