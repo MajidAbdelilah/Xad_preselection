@@ -12,3 +12,8 @@ linux for n = 10000, m = 10000
 init time = 1976.28ms
 run time = 222843ms
 sum = 2.59847e+06
+
+windows:
+init time = 632.239ms
+run time = 1319.35ms
+sum = 251742

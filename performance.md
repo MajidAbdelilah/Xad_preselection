@@ -8,6 +8,14 @@
           - init time = 1135.29ms
           - run time = 546.181ms
           - sum = 261191
+    - platform number 2:
+      - os: windows 11
+      - proccessor: 12th Gen Intel(R) Core(TM) i7-1255U   1.70 GHz
+      - compiler MSVC 17 2022 64-bit
+      - performance metrics:
+        - init time = 638.964ms
+        - run time = 1285.93ms
+        - sum = 251742
 
 # implementation:
 - i used avx and avx2 and fma to hardware accelerate the dot product inside of the frobenius_norm formula.
