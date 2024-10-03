@@ -16,6 +16,14 @@
         - init time = 638.964ms
         - run time = 1285.93ms
         - sum = 251742
+	- platform number 3:
+		- os: arch linux latest version kernel 6.11.1
+		- proccessor: 12th Gen Intel® Core™ i7-1255U × 12
+		- compiler: g++ (GCC) 14.2.1 20240910
+		- performance metrics:
+			- init time = 1559ms
+			- run time = 1089.25ms
+			- sum = 260178
 
 # implementation:
 - i used avx and avx2 and fma to hardware accelerate the dot product inside of the frobenius_norm formula.
