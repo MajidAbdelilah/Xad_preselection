@@ -30,12 +30,12 @@ Matrix::Matrix(const Matrix &m)
 Matrix::Matrix(Matrix &&m)
     : _rows(m._rows), _cols(m._cols), data(m.data), data_ref_count(m.data_ref_count)
 {
-    m.data = nullptr;
-    m.data_ref_count = nullptr;
+    (*data_ref_count)++;
 }
 
 Matrix::~Matrix()
 {
+    // std::cout << "Destructor called" << std::endl;
     if (--(*data_ref_count) == 0)
     {
         delete[] data;
@@ -81,6 +81,8 @@ Matrix &Matrix::operator=(Matrix &&m)
     _cols = m._cols;
     data = m.data;
     data_ref_count = m.data_ref_count;
+
+    (*data_ref_count)++;
     return *this;
 }
 
