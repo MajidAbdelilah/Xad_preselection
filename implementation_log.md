@@ -5,4 +5,5 @@
 - third i've implemented the frobenius_norm function with a baseline unoptimized version and the optimized (avx,avx2,fma) version wich is used for the benchmark
 - fourth i've observed the cpu utilization of my implementation and noticed it uses only 20% of it wich what led me to the conclosion that the conversion from MatrixView to Matrix is botelneking my programs execution so ive optimized it.
 - fifth ive coded the unit tests.
-- last ive done the documation
+- ive done the documation
+- last ive done the video
