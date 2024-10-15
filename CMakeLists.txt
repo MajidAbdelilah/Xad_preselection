@@ -25,8 +25,14 @@ if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
 endif()
 
+option(use_unoptimized "Use unoptimized code" OFF)
+
 if(CMAKE_HOST_LINUX OR CMAKE_HOST_UNIX)
-  set(CMAKE_CXX_FLAGS " -Ofast -mavx -mfma -mavx2 -mtune=native ")
+	if(use_unoptimized)
+		set(CMAKE_CXX_FLAGS " -O3 -Dun_optimized ")
+	else()
+		set(CMAKE_CXX_FLAGS " -O3 -mavx -mfma -mavx2 -mtune=native ")
+	endif()
 endif()
 
 if(CMAKE_HOST_WIN32)

@@ -6,7 +6,7 @@
 #include <iostream>
 int main() {
     constexpr int N = 10000;
-    constexpr int M = 1000;
+    constexpr int M = 5000;
     // create a big matrix of NxN
     Matrix m(N, N);
     std::default_random_engine eng(1234);
@@ -26,14 +26,18 @@ int main() {
     // calculate Frobenius norms of rectangular tiles of different sizes
     std::uniform_int_distribution<int> startdist(0, N - M), spandist(1, M);
     start = std::chrono::high_resolution_clock::now();
-    for (int i = 0; i < 1000; ++i) {
+    for (int i = 0; i < 5000; ++i) {
         int starti = startdist(eng);
         int startj = startdist(eng);
         int spani = spandist(eng);
         int spanj = spandist(eng);
         MatrixView mv(m, starti, startj, spani, spanj);
         // use the result to avoid aggressive compiler to optimise out the loop.
+#ifdef un_optimized
+		sum += frobenius_norm_baseline_unoptimized(mv);
+#else
         sum += frobenius_norm(mv);
+#endif
     }
     stop = std::chrono::high_resolution_clock::now();
     auto t_comp =

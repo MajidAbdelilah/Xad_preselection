@@ -152,6 +152,18 @@ long MatrixView::get_true_cols() const
 	return _cols;
 }
 
+#ifdef un_optimized
+MatrixView::operator Matrix() const
+{
+    Matrix m(_rows, _reported_cols);
+	for (long i = 0; i < _rows; i++)
+	{
+		for(long j = 0; j < _reported_cols; j++)
+	    	m.get_data()[i * m.cols() + j] = data[(i + _rows_start) * _cols + j + _cols_start];
+	}
+	return m;
+}
+#else
 MatrixView::operator Matrix() const
 {
     Matrix m(_rows, _reported_cols);
@@ -180,4 +192,4 @@ MatrixView::operator Matrix() const
 	// }
 	return m;
 }
-
+#endif

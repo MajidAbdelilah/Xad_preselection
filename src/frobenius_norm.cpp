@@ -11,6 +11,8 @@
 // Using templates with offset int argument to make easier for compiler to emit good code.
 
 // Multiply 4 doubles by another 4 doubles.
+#ifndef un_optimized
+
 template<int offsetRegs>
 inline __m256d mul4( const double* p1, const double* p2 )
 {
@@ -148,7 +150,12 @@ double frobenius_norm(const Matrix& m)
     delete [] results;
     return sqrt( sum );
 }
-
+#else
+double frobenius_norm(const Matrix& m)
+{
+	return frobenius_norm_baseline_unoptimized(m);
+}
+#endif
 
 
 
